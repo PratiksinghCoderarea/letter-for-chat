@@ -91,7 +91,7 @@
 </head>
 <body>
   <div class="card" id="card1" style="left: calc(50% - 50px); top: calc(50% - 75px); z-index: 1;">Card 1</div>
-  <div class="card" id="card2" style="left: calc(50% - 50px); top: calc(50% - 75px); z-index: 2;">Card 22</div>
+  <div class="card" id="card2" style="left: calc(50% - 50px); top: calc(50% - 75px); z-index: 2;">Card 2</div>
   <div class="wrapper">
     <div class="heart x1"></div>
     <div class="heart x2"></div>
@@ -99,9 +99,6 @@
     <div class="heart x4"></div>
     <div class="heart x5"></div>
     <div class="altheart x6"></div>
-    <div class="heart x7"></div>
-    <div class="heart x8"></div>
-    <div class="heart x9"></div>
   </div>
   <script>
     const cards = document.querySelectorAll('.card');
@@ -116,8 +113,10 @@
       function dragStart(event) {
         event.preventDefault();
         isDragging = true;
-        offsetX = event.type === 'touchstart' ? event.touches[0].clientX - card.getBoundingClientRect().left : event.clientX - card.getBoundingClientRect().left;
-        offsetY = event.type === 'touchstart' ? event.touches[0].clientY - card.getBoundingClientRect().top : event.clientY - card.getBoundingClientRect().top;
+
+        const touch = event.type === 'touchstart' ? event.touches[0] : event;
+        offsetX = touch.clientX - card.getBoundingClientRect().left;
+        offsetY = touch.clientY - card.getBoundingClientRect().top;
 
         document.addEventListener('mousemove', drag);
         document.addEventListener('mouseup', dragEnd);
@@ -129,5 +128,24 @@
       function drag(event) {
         if (!isDragging) return;
 
-        const x = event.type === 'touchmove' ? event.touches[0].clientX - offsetX : event.clientX - offsetX;
-        const y = event.type === 'touchmove' ? event.touches[0
+        const touch = event.type === 'touchmove' ? event.touches[0] : event;
+        const x = touch.clientX - offsetX;
+        const y = touch.clientY - offsetY;
+
+        card.style.left = `${x}px`;
+        card.style.top = `${y}px`;
+      }
+
+      function dragEnd() {
+        isDragging = false;
+
+        document.removeEventListener('mousemove', drag);
+        document.removeEventListener('mouseup', dragEnd);
+
+        document.removeEventListener('touchmove', drag, { passive: false });
+        document.removeEventListener('touchend', dragEnd);
+      }
+    });
+  </script>
+</body>
+</html>
