@@ -12,7 +12,6 @@
       margin: 0;
     }
 
-    
     .card {
       position: absolute;
       width: 150px;
@@ -32,14 +31,6 @@
 
     .card:hover {
       transform: scale(1.05);
-    }
-    #card2 {
-  transform: rotate(20deg);
-}
-html, body {
-      height: 100%;
-      margin: 0;
-      padding: 0;
     }
 
     .wrapper {
@@ -74,7 +65,7 @@ html, body {
       transform-origin: 100% 100%;
     }
 
-    .x1, .x2, .x3, .x4, .x5, .altheart.x6 {
+    .x1, .x2, .x3, .x4, .x5, .altheart.x6, .heart.x7, .heart.x8, .heart.x9 {
       position: absolute;
       top: 0;
       width: 24px;
@@ -88,7 +79,10 @@ html, body {
     .x4 { left: 72%; transform: scale(0.75); opacity: 0.9; animation: moveclouds 18s linear infinite, sideWays 2s ease-in-out infinite alternate; }
     .x5 { left: 88%; transform: scale(0.8); opacity: 0.3; animation: moveclouds 7s linear infinite, sideWays 1s ease-in-out infinite alternate; }
     .x6 { left: 33%; opacity: 1; animation: moveclouds 2s linear infinite, swayWays 1s ease-in-out infinite alternate; }
-    
+    .x7 { left: 15%; transform: scale(0.7); opacity: 0.7; animation: moveclouds 22s linear infinite, sideWays 3s ease-in-out infinite alternate; }
+    .x8 { left: 45%; transform: scale(0.9); opacity: 0.5; animation: moveclouds 12s linear infinite, sideWays 6s ease-in-out infinite alternate; }
+    .x9 { left: 65%; transform: scale(0.8); opacity: 0.6; animation: moveclouds 30s linear infinite, sideWays 7s ease-in-out infinite alternate; }
+
     @keyframes moveclouds { 0% { top: 500px; } 100% { top: -500px; } }
     @keyframes sideWays { 0% { margin-left:0px; } 100% { margin-left:50px; } }
     @keyframes swayWays { 0% { transform: rotate(12deg); left:-0.3%; } 33% { transform: rotate(-2deg); left: 0.7%; } 100% { transform: rotate(0deg); left:-12%; } }
@@ -96,7 +90,6 @@ html, body {
   <title>Drag and Drop Cards</title>
 </head>
 <body>
-
   <div class="card" id="card1" style="left: calc(50% - 50px); top: calc(50% - 75px); z-index: 1;">Card 1</div>
   <div class="card" id="card2" style="left: calc(50% - 50px); top: calc(50% - 75px); z-index: 2;">Card 2</div>
   <div class="wrapper">
@@ -106,6 +99,9 @@ html, body {
     <div class="heart x4"></div>
     <div class="heart x5"></div>
     <div class="altheart x6"></div>
+    <div class="heart x7"></div>
+    <div class="heart x8"></div>
+    <div class="heart x9"></div>
   </div>
   <script>
     const cards = document.querySelectorAll('.card');
@@ -120,8 +116,8 @@ html, body {
       function dragStart(event) {
         event.preventDefault();
         isDragging = true;
-        offsetX = event.clientX - card.getBoundingClientRect().left;
-        offsetY = event.clientY - card.getBoundingClientRect().top;
+        offsetX = event.type === 'touchstart' ? event.touches[0].clientX - card.getBoundingClientRect().left : event.clientX - card.getBoundingClientRect().left;
+        offsetY = event.type === 'touchstart' ? event.touches[0].clientY - card.getBoundingClientRect().top : event.clientY - card.getBoundingClientRect().top;
 
         document.addEventListener('mousemove', drag);
         document.addEventListener('mouseup', dragEnd);
@@ -133,24 +129,5 @@ html, body {
       function drag(event) {
         if (!isDragging) return;
 
-        const x = event.clientX - offsetX;
-        const y = event.clientY - offsetY;
-
-        card.style.left = `${x}px`;
-        card.style.top = `${y}px`;
-      }
-
-      function dragEnd() {
-        isDragging = false;
-
-        document.removeEventListener('mousemove', drag);
-        document.removeEventListener('mouseup', dragEnd);
-
-        document.removeEventListener('touchmove', drag, { passive: false });
-        document.removeEventListener('touchend', dragEnd);
-      }
-    });
-  </script>
-
-</body>
-</html>
+        const x = event.type === 'touchmove' ? event.touches[0].clientX - offsetX : event.clientX - offsetX;
+        const y = event.type === 'touchmove' ? event.touches[0].
